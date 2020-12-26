@@ -16,4 +16,4 @@
 # You should have received a copy of the GNU General Public License
 # along with `blackholepy`.  If not, see <http://www.gnu.org/licenses/>.
 
-from .survey import *
+from hallmark import ParaFrame
