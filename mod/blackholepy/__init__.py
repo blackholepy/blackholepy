@@ -17,3 +17,5 @@
 # along with `blackholepy`.  If not, see <http://www.gnu.org/licenses/>.
 
 from .survey import *
+
+from . import sed
