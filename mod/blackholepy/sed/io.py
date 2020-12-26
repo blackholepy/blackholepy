@@ -21,7 +21,7 @@ from math import pi, floor, cos
 import numpy as np
 import h5py
 
-def load(file, i=70, di=10):
+def load_one(file, i=70, di=10):
     ME   = 9.1093897e-28
     CL   = 2.99792458e10
     HPL  = 6.6260755e-27
@@ -47,3 +47,25 @@ def load(file, i=70, di=10):
         W += w
         T += w * nuLnu[:,:,mth[j]]
     return nu, T.T / W
+
+def load(files, **kwargs):
+    if isinstance(files, str):
+        files = [files]
+
+    nuLnu = [] # collect arrays in list and then cast to np.array()
+               # all at once is faster than concatenate
+    for f in files:
+        data = load_one(f, **kwargs)
+        nuLnu.append(np.column_stack(
+            (np.sum(data[1], axis=-1), data[1])
+        ))
+        try:
+            if all(nu != data[0]):
+                raise ValueError('Frequency bins `nu` do not match')
+        except NameError:
+            nu = data[0]
+    nuLnu = np.array(nuLnu)
+
+    return (nu,
+            np.mean(nuLnu, axis=0),
+            np.std (nuLnu, axis=0))
