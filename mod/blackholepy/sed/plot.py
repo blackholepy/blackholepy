@@ -41,8 +41,8 @@ def interval(avg, std, sigma=1):
 
     return lower * units, upper * units
 
-def step(ax, nu, avg, std=None, sigma=1,
-         shade=True, ylog=True, **kwargs):
+def step_one(ax, nu, avg, std=None, sigma=1,
+             shade=True, ylog=True, **kwargs):
     p = ax.step(nu, avg, where='mid', **kwargs)
 
     if std is not None and shade:
@@ -55,3 +55,17 @@ def step(ax, nu, avg, std=None, sigma=1,
     # optionally we may set y-axis to log sacle
     if ylog:
         ax.set_yscale('log')
+
+def step(ax, nu, avg, std=None, color=None, shade=None, label=None, **kwargs):
+    n   = len(nu)
+    avg = avg.reshape(n,-1)
+    for i in range(avg.shape[-1]):
+        stdi   = std.reshape(n,-1)[:,i] if std is not None else None
+        colori = color if color is not None else ('k'  if i == 0 else None)
+        widthi = 2 if i == 0 else 1
+        shadei = shade if shade is not None else (True if i == 0 else False)
+        labeli = label[i] if label is not None else None
+        step_one(ax, nu, avg[:,i], stdi,
+                 color=colori, linewidth=widthi,
+                 shade=shadei, label=labeli,
+                 **kwargs)
