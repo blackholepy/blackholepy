@@ -22,7 +22,7 @@ import numpy as np
 def value(g, s):
     return g[s][()]
 
-def load(file):
+def load_one(file):
     with h5py.File(file, "r") as f:
         h = f['header']
         c = h['camera']
@@ -44,3 +44,16 @@ def load(file):
         I = np.copy(f['unpol']).transpose((1,0)) * value(h, 'scale')
 
     return X, Y, I
+
+def load(files, **kwargs):
+    if isinstance(files, str):
+        files = [files]
+
+    imgs = [] # collect arrays in list and then cast to np.array()
+              # all at once is faster than concatenate
+    for f in files:
+        X, Y, I = load_one(f, **kwargs)
+        imgs.append(I)
+    imgs = np.array(imgs)
+
+    return X, Y, imgs
