@@ -16,6 +16,31 @@
 # You should have received a copy of the GNU General Public License
 # along with `blackholepy`.  If not, see <http://www.gnu.org/licenses/>.
 
-from .survey import *
+import h5py
+import numpy as np
 
-from . import img, sed
+def value(g, s):
+    return g[s][()]
+
+def load(file):
+    with h5py.File(file, "r") as f:
+        h = f['header']
+        c = h['camera']
+        u = h['units']
+
+        dx  = value(c, 'dx') * value(u, 'L_unit')
+        fov = dx / value(h, 'dsource') * 2.06265e11
+        nx  = value(c, 'nx')
+        X   = np.linspace(-fov, fov, nx)
+
+        try:
+            dy  = value(c, 'dy') * value(u, 'L_unit')
+            fov = dy / value(h, 'dsource') * 2.06265e11
+            ny  = value(c, 'ny')
+            Y   = np.linspace(-fov, fov, ny)
+        except:
+            Y = X
+
+        I = np.copy(f['unpol']).transpose((1,0)) * value(h, 'scale')
+
+    return X, Y, I
