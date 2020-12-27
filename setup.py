@@ -41,6 +41,7 @@ setup(
         'h5py>=3.1',
         'matplotlib>=3.2',
         'numpy>=1.19',
+        'scipy>=1.5.4',
         'tqdm>=4.46.1',
     ],
 )

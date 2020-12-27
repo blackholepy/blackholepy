@@ -16,5 +16,27 @@
 # You should have received a copy of the GNU General Public License
 # along with `blackholepy`.  If not, see <http://www.gnu.org/licenses/>.
 
-from .io import *
-from .   import pack, plot
+from scipy.stats import poisson, norm
+
+def interval(avg, std, sigma=1):
+    """We model the different realizations of grmonty results follow a
+    Poisson distribution, which has mean and variance both equal to
+    `mu`.  Therefore,
+
+        avg = dnuLnu * mu
+        std = dnuLnu * sqrt(mu)
+
+        mu = (avg/std)**2
+
+    One we obtain `mu`, we can estimate the lower and upper intervals
+    according to `sigma`.
+
+    """
+    with np.errstate(invalid='ignore', divide='ignore'):
+        mu = (avg/std)**2
+
+    lower = poisson.ppf(norm.cdf(-sigma), mu)
+    upper = poisson.ppf(norm.cdf(+sigma), mu)
+    units = avg / mu
+
+    return lower * units, upper * units
