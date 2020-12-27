@@ -29,11 +29,18 @@ setup(
     description='Python for Black Hole Astrophysics',
     packages=find_packages('mod'),
     package_dir={'': 'mod'},
+    entry_points={
+        'console_scripts': [
+            'sed-pack = blackholepy.sed.pack:pack',
+        ],
+    },
     python_requires='>=3.6', # `blackholepy` uses python3's f-string and typing
     install_requires=[
+        'click>=7.1.2',
         'hallmark>=0.1',
         'h5py>=3.1',
         'matplotlib>=3.2',
         'numpy>=1.19',
+        'tqdm>=4.46.1',
     ],
 )
