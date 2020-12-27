@@ -55,3 +55,12 @@ def pack(path, inclination, output):
         f['avg'] = np.array(avgs)
         f['err'] = np.array(errs)
         f['len'] = np.array(lens)
+
+def load(fname):
+    with h5py.File(fname) as f:
+        frm = f['frm'][:]
+        nu  = f['nu' ][:]
+        knd = f['knd'][:]
+        avg = f['avg'][:]
+        err = f['err'][:]
+    return frm, nu, avg, err, knd

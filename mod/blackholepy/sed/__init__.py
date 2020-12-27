@@ -17,3 +17,4 @@
 # along with `blackholepy`.  If not, see <http://www.gnu.org/licenses/>.
 
 from .io import *
+from .   import pack
